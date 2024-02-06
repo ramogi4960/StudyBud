@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+
+{% block title %} Create Topic {% endblock %}
+
+
+{% block content %}
+<h1>Create a new Topic</h1>
+<hr>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_div }}
+    <input type="submit" value="Create topic">
+</form>
+<a href="{% url 'homepage' %}">Go back to homepage</a>
+{% endblock %}

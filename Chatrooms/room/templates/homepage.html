@@ -1,7 +1,16 @@
-{% extends "main.html %}
+{% extends "main.html" %}
 
 {% block title %} Homepage {% endblock %}
 
 {% block content %}
-<h1>This is the homepage</h1>
+<h1>Welcome back {{ request.user }}</h1><br>
+<a href="{% url 'create_topic' %}">create new topic</a><br>
+<a href="{% url 'create_room' %}">create new room</a><br>
+<hr>
+<h1>Rooms</h1>
+<ul>
+    {% for room in rooms %}
+    <li>{{ room.name }}</li>
+    {% endfor %}
+</ul>
 {% endblock %}
