@@ -7,7 +7,7 @@
     {% for comment in comments %}
     <li>
         <div>
-            <p>@{{ comment.author }}</p>
+            <p>@{{ comment.author }} {{ comment.updated|timesince }} ago</p>
             <p>{{ comment.room }}</p>
             <p>{{ comment.content }}</p>
         </div>

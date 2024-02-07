@@ -84,9 +84,9 @@ def create_room(request):
     if request.method == "POST":
         form = FormRoom(request.POST)
         if form.is_valid():
-            # form.save(commit=False)
-            # form.creator = User(id=request.user.id)
-            form.save()
+            room = form.save(commit=False)
+            room.creator = request.user
+            room.save()
             return redirect("homepage")
     context = {
         "form": FormRoom(),
@@ -96,8 +96,19 @@ def create_room(request):
 
 @login_required(login_url="user_login")
 def view_room(request, pk):
+    if request.method == "POST":
+        comment = Comment.objects.create(
+            author=request.user,
+            content=request.POST.get("comment"),
+            room=Room.objects.get(id=pk),
+        )
+        comment.save()
+        Room.objects.get(id=pk).participants.add(request.user)
+        return redirect("view_room", pk=Room.objects.get(id=pk).id)
     context = {
         "room": Room.objects.get(id=pk),
+        "comments": Room.objects.get(id=pk).comment_set.all().order_by("-updated"),
+        "participants": Room.objects.get(id=pk).participants.all(),
     }
     return render(request, "view_room.html", context)
 

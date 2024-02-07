@@ -12,7 +12,7 @@ class FormRoom(ModelForm):
     class Meta:
         model = Room
         fields = "__all__"
-        # exclude = ["creator", "participants"]
+        exclude = ["creator", "participants"]
 
 
 class FormComment(ModelForm):
