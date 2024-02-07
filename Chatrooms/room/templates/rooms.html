@@ -1,0 +1,10 @@
+<h1>Rooms</h1>
+<ul>
+    {% for room in rooms %}
+    <div>
+        <a href="{% url 'view_room' room.id %}"><li>{{ room.name }}</li></a><br>
+        <a href="{% url 'edit_room' room.id %}">Edit</a> <a href="{% url 'delete_room' room.id %}">Delete</a>
+    </div>
+    <hr>
+    {% endfor %}
+</ul>
