@@ -3,7 +3,9 @@
     {% for room in rooms %}
     <div>
         <a href="{% url 'view_room' room.id %}"><li>{{ room.name }}</li></a><br>
+        {% if room.creator == request.user %}
         <a href="{% url 'edit_room' room.id %}">Edit</a> <a href="{% url 'delete_room' room.id %}">Delete</a>
+        {% endif %}
     </div>
     <hr>
     {% endfor %}

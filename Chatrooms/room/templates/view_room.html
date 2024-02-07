@@ -3,9 +3,25 @@
 {% block title %} View Room {% endblock %}
 
 {% block content %}
-<p>@{{ room.creator }}</p>
-<p>{{ room.name }}</p>
-<p>{{ room.topic }}</p>
-<p>{{ room.details }}</p>
-<a href="{% url 'homepage' %}">Go back to homepage</a>
+<style>
+    .view_div {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    }
+</style>
+<div class="view_div">
+    <div>
+        <p>@{{ room.creator }}</p>
+        <p>{{ room.name }}</p>
+        <p>{{ room.topic }}</p>
+        <p>{{ room.details }}</p>
+        <a href="{% url 'homepage' %}">Go back to homepage</a>
+
+
+    </div>
+    <div>
+        <h1>Participants</h1>
+    </div>
+</div>
+
 {% endblock %}

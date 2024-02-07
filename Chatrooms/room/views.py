@@ -60,6 +60,7 @@ def homepage(request):
             Q(creator__username__icontains=q)
         ),
         "topics": Topic.objects.all(),
+        "comments": Comment.objects.all(),
     }
     return render(request, "homepage.html", context)
 

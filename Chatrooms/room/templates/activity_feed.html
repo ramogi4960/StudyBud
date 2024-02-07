@@ -1,0 +1,17 @@
+<h1>Activity feed</h1>
+
+<ul>
+    {% if not comments %}
+    <li>There are no comments available</li>
+    {% else %}
+    {% for comment in comments %}
+    <li>
+        <div>
+            <p>@{{ comment.author }}</p>
+            <p>{{ comment.room }}</p>
+            <p>{{ comment.content }}</p>
+        </div>
+    </li>
+    {% endfor %}
+    {% endif %}
+</ul>
