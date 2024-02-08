@@ -20,12 +20,14 @@
         {% endfor %}
     </div>
     <div>
+        <h1>Rooms</h1>
         {% for room in rooms %}
         <p>{{ room.name }}</p>
         <p>{{ room.details }}</p>
         {% endfor %}
     </div>
     <div>
+        <h1> Comments </h1>
        {% for comment in comments %}
         <p>{{ comment.updated|timesince }} ago</p>
         <p>{{ comment.content }}</p>
