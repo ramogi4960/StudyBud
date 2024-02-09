@@ -63,8 +63,7 @@
             <div class="roomListRoom__content">
               <a href="{% url 'view_room' room.id %}">{{ room.name }}</a>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ducimus harum dolorem, obcaecati
-                mollitia omnis quasi aut consequuntur enim itaque labore.
+                {{ room.details }}
               </p>
             </div>
             <div class="roomListRoom__meta">
