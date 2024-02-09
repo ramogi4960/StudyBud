@@ -139,11 +139,23 @@ def delete_room(request, pk):
 
 
 @login_required(login_url="user_login")
+def delete_comment(request, pk):
+    if request.method == "POST":
+        Comment.objects.get(id=pk).delete()
+        return render("homepage")
+    context = {
+        "comment": Comment.objects.get(id=pk),
+    }
+    return render(request, "delete_comment.html", context)
+
+
+@login_required(login_url="user_login")
 def user_profile(request, pk):
     context = {
         "topics": Topic.objects.all(),
         "rooms": User.objects.get(id=pk).room_set.all(),
         "comments": User.objects.get(id=pk).comment_set.all(),
+        "user": User.objects.get(id=pk),
     }
     return render(request, "user_profile.html", context)
 

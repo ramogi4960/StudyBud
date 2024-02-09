@@ -1,0 +1,49 @@
+{% extends "main.html" %}
+
+{% block title %} View Room {% endblock %}
+
+{% block content %}
+<style>
+    .view_div {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    }
+</style>
+<div class="view_div">
+    <div>
+        <p>@{{ room.creator }}</p>
+        <p>{{ room.name }}</p>
+        <p>{{ room.topic }}</p>
+        <p>{{ room.details }}</p>
+        <a href="{% url 'homepage' %}">Go back to homepage</a>
+
+        <h2>Comments</h2>
+        {% if not comments %}
+        <div><p>There are no comments available</p></div>
+        {% else %}
+        {% for comment in comments %}
+        <div>
+            <p>@{{ comment.author }} {{ comment.updated|timesince }} ago</p>
+            <p>{{ comment.content }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <br><hr>
+
+        <h4>Add a comment</h4>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="comment" placeholder="Enter comment ..." style="width:500px;">
+            <input type="submit" value="Submit comment">
+        </form>
+
+    </div>
+    <div>
+        <h1>Participants</h1>
+        {% for person in participants %}
+        <p>{{ person.username }}</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
