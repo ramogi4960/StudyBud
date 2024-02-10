@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import FormTopic, FormRoom, FormComment
+from .forms import FormTopic, FormRoom, FormComment, FormUser
 from .models import Topic, Room, Comment
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -82,14 +82,17 @@ def create_topic(request):
 @login_required(login_url="user_login")
 def create_room(request):
     if request.method == "POST":
-        form = FormRoom(request.POST)
-        if form.is_valid():
-            room = form.save(commit=False)
-            room.creator = request.user
-            room.save()
-            return redirect("homepage")
+        topic, created = Topic.objects.get_or_create(name=request.POST.get("topic"))
+        Room.objects.create(
+            name=request.POST.get("name"),
+            topic=topic,
+            details=request.POST.get("details"),
+            creator=request.user,
+        )
+        return redirect("homepage")
     context = {
         "form": FormRoom(),
+        "topics": Topic.objects.all(),
     }
     return render(request, "create_room.html", context)
 
@@ -116,13 +119,18 @@ def view_room(request, pk):
 @login_required(login_url="user_login")
 def edit_room(request, pk):
     if request.method == "POST":
-        form = FormRoom(request.POST, instance=Room.objects.get(id=pk))
-        if form.is_valid():
-            form.save()
-            return redirect("homepage")
+        room = Room.objects.get(id=pk)
+        topic, created = Topic.objects.get_or_create(name=request.POST.get("topic"))
+        room.name = request.POST.get("room_name")
+        room.topic = topic
+        room.details = request.POST.get("room_about")
+        room.save()
+        return redirect("homepage")
 
     context = {
         "form": FormRoom(instance=Room.objects.get(id=pk)),
+        "room": Room.objects.get(id=pk),
+        "topics": Topic.objects.all(),
     }
     return render(request, "edit_room.html", context)
 
@@ -142,7 +150,7 @@ def delete_room(request, pk):
 def delete_comment(request, pk):
     if request.method == "POST":
         Comment.objects.get(id=pk).delete()
-        return render("homepage")
+        return redirect("homepage")
     context = {
         "comment": Comment.objects.get(id=pk),
     }
@@ -158,4 +166,17 @@ def user_profile(request, pk):
         "user": User.objects.get(id=pk),
     }
     return render(request, "user_profile.html", context)
+
+
+@login_required(login_url="user_login")
+def edit_user(request):
+    if request.method == "POST":
+        form = FormUser(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("user_profile", pk=request.user.id)
+    context = {
+        "form": FormUser(instance=request.user),
+    }
+    return render(request, "edit_user.html", context)
 
