@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import FormTopic, FormRoom, FormComment, FormUser
-from .models import Topic, Room, Comment
-from django.contrib.auth.models import User
+from .forms import FormTopic, FormRoom, FormComment, FormUserModel
+from .models import Topic, Room, Comment, UserModel
 from django.db.models import Q
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
@@ -28,7 +27,7 @@ def user_login(request):
         password = request.POST.get("password")
 
         try:
-            user = User.objects.get(username=username)
+            user = UserModel.objects.get(username=username)
         except:
             messages.error(request, "Username does not exist")
         else:
@@ -51,7 +50,6 @@ def user_logout(request):
 @login_required(login_url="user_login")
 def homepage(request):
     q = request.GET.get("q") if request.GET.get("q") else ""
-
     context = {
         "rooms": Room.objects.filter(
             Q(topic__name__icontains=q) |
@@ -59,9 +57,13 @@ def homepage(request):
             Q(details__icontains=q) |
             Q(creator__username__icontains=q)
         ),
-        "topics": Topic.objects.all(),
+        "topics": Topic.objects.all()[:5],
         "comments": Comment.objects.all(),
     }
+
+    if q == "more":
+        context["topics"] = Topic.objects.all()
+        context["rooms"] = Room.objects.all()
     return render(request, "homepage.html", context)
 
 
@@ -161,9 +163,9 @@ def delete_comment(request, pk):
 def user_profile(request, pk):
     context = {
         "topics": Topic.objects.all(),
-        "rooms": User.objects.get(id=pk).room_set.all(),
-        "comments": User.objects.get(id=pk).comment_set.all(),
-        "user": User.objects.get(id=pk),
+        "rooms": UserModel.objects.get(id=pk).room_set.all(),
+        "comments": UserModel.objects.get(id=pk).comment_set.all(),
+        "user": UserModel.objects.get(id=pk),
     }
     return render(request, "user_profile.html", context)
 
@@ -171,12 +173,12 @@ def user_profile(request, pk):
 @login_required(login_url="user_login")
 def edit_user(request):
     if request.method == "POST":
-        form = FormUser(request.POST, instance=request.user)
+        form = FormUserModel(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect("user_profile", pk=request.user.id)
     context = {
-        "form": FormUser(instance=request.user),
+        "form": FormUserModel(instance=request.user),
     }
     return render(request, "edit_user.html", context)
 

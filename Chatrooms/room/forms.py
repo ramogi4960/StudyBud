@@ -1,6 +1,5 @@
 from django.forms import ModelForm
-from .models import Topic, Room, Comment
-from django.contrib.auth.models import User
+from .models import Topic, Room, Comment, UserModel
 
 
 class FormTopic(ModelForm):
@@ -22,7 +21,7 @@ class FormComment(ModelForm):
         fields = "__all__"
 
 
-class FormUser(ModelForm):
+class FormUserModel(ModelForm):
     class Meta:
-        model = User
+        model = UserModel
         fields = ["username", "email"]
