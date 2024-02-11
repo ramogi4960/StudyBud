@@ -39,7 +39,11 @@
                   <img src="{{ comment.author.avatar.url }}" />
                 </div>
                 <p>
-                  @{{ comment.author }}
+                    {% if comment.author.name %}
+                  @{{ comment.author.name }}
+                    {% else %}
+                    @{{ comment.author }}
+                    {% endif %}
                   <span>{{ comment.updated|timesince }} ago</span>
                 </p>
               </a>

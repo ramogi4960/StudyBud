@@ -22,7 +22,11 @@
           </div>
           {% if request.user == user %}
           <div class="profile__info">
+            {% if user.name %}
+            <h3>{{ user.name }}</h3>
+            {% else %}
             <h3>{{ user.username }}</h3>
+            {% endif %}
             <p>@{{ user.username }}</p>
             <a href="{% url 'edit_user' %}" class="btn btn--main btn--pill">Edit Profile</a>
           </div>

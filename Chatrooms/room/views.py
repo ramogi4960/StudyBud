@@ -1,37 +1,36 @@
 from django.shortcuts import render, redirect
-from .forms import FormTopic, FormRoom, FormComment, FormUserModel
+from .forms import FormTopic, FormRoom, FormComment, FormUserModel, FormUserRegistration
 from .models import Topic, Room, Comment, UserModel
 from django.db.models import Q
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 
 
 def user_registration(request):
     if request.method == "POST":
-        form = UserCreationForm(request.POST)
+        form = FormUserRegistration(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect("homepage")
     context = {
-        "form": UserCreationForm(),
+        "form": FormUserRegistration(),
     }
     return render(request, "user_registration.html", context)
 
 
 def user_login(request):
     if request.method == "POST":
-        username = request.POST.get("username")
+        email = request.POST.get("email")
         password = request.POST.get("password")
 
         try:
-            user = UserModel.objects.get(username=username)
+            user = UserModel.objects.get(email=email)
         except:
-            messages.error(request, "Username does not exist")
+            messages.error(request, "Email does not exist")
         else:
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(request, email=email, password=password)
             if user:
                 login(request, user)
                 return redirect("homepage")
@@ -173,7 +172,7 @@ def user_profile(request, pk):
 @login_required(login_url="user_login")
 def edit_user(request):
     if request.method == "POST":
-        form = FormUserModel(request.POST, instance=request.user)
+        form = FormUserModel(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             return redirect("user_profile", pk=request.user.id)

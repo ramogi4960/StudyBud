@@ -1,5 +1,12 @@
 from django.forms import ModelForm
 from .models import Topic, Room, Comment, UserModel
+from django.contrib.auth.forms import UserCreationForm
+
+
+class FormUserRegistration(UserCreationForm):
+    class Meta:
+        model = UserModel
+        fields = ["name", "username", "email", "password1", "password2"]
 
 
 class FormTopic(ModelForm):
@@ -24,4 +31,4 @@ class FormComment(ModelForm):
 class FormUserModel(ModelForm):
     class Meta:
         model = UserModel
-        fields = ["username", "email"]
+        fields = ["name", "username", "email", "avatar", "bio"]

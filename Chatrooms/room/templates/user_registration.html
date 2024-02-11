@@ -17,7 +17,7 @@
               {% csrf_token %}
               {% for field in form %}
               <div class="form__group form__group">
-                <label for="fullname">{{ field.label }}</label>
+                <label for="">{{ field.label }}</label>
 <!--                <input id="fullname" name="fullname" type="text" placeholder="e.g. Dennis Ivy" />-->
                 {{ field }}
               </div>
